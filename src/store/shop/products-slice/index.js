@@ -11,10 +11,16 @@ const initialState = {
 export const fetchAllFilteredProducts = createAsyncThunk(
   "/products/fetchAllProducts",
   async ({ filterParams, sortParams }) => {
+    console.log(filterParams, sortParams);
     const query = new URLSearchParams({
       ...filterParams,
       sortBy: sortParams,
     });
+    console.log("Query string:", query.toString());
+    console.log(
+      "Full URL:",
+      `http://localhost:5000/api/shop/products/get?${query}`
+    );
     const result = await axios.get(
       `http://localhost:5000/api/shop/products/get?${query}`
     );
@@ -46,8 +52,6 @@ const shoppingProductSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(fetchAllFilteredProducts.fulfilled, (state, action) => {
-        console.log(action.payload, "action.payload");
-
         state.isLoading = false;
         state.productList = action.payload.data;
       })
